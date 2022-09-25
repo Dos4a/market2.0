@@ -15,18 +15,14 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
-});
-
-// Route::get('product', function () {
-//     return view('product');
-// })->name('product.index');
-// Route::post('product', [TestController::class, 'add'])->name('product.add');
 
 Route::prefix('product')->group(function () {
     Route::get('/', [ProductController::class, 'index'])->name('product.index');
-    Route::post('/', [ProductController::class, 'store'])->name('product.store');
+    Route::get('/create', [ProductController::class, 'create'])->name('product.create');
+    Route::post('/store', [ProductController::class, 'store'])->name('product.store');
+    Route::get('/edit/{id}', [ProductController::class, 'edit'])->name('product.edit');
+    Route::post('/update/{id}', [ProductController::class, 'update'])->name('product.update');
+    Route::get('/destroy/{id}', [ProductController::class, 'destroy'])->name('product.destroy');
 });
 
 Route::get('/dashboard', function () {

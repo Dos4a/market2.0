@@ -4,12 +4,22 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Product;
+use Illuminate\Support\Facades\DB;
+
 
 class ProductController extends Controller
 {
+
     public function index()
     {
-        return view('product');
+        $products = Product::all();
+
+        return view('products', compact('products'));
+    }
+
+    public function create()
+    {
+        return view('productAdd');
     }
 
 
@@ -22,6 +32,33 @@ class ProductController extends Controller
             'price' => $request->price,
             'image_id' => $request->image_id,
         ]);
+
+        return redirect(route('product.index'));
+    }
+
+    public function edit($id)
+    {
+        $data = Product::find($id);
+
+        return view('edit', compact('data'));
+    }
+
+    public function update(Request $request, $id)
+    {
+        DB::table('products')->where('id', $id)->update([
+            'category_id' => $request->category_id,
+            'name' => $request->name,
+            'description' => $request->description,
+            'price' => $request->price,
+            'image_id' => $request->image_id,
+        ]);
+
+        return redirect(route('product.index'));
+    }
+
+    public function destroy($id)
+    {
+        DB::table('products')->where('id', $id)->delete();
 
         return redirect(route('product.index'));
     }
