@@ -13,7 +13,16 @@ class Product extends Model
         'category_id',
         'name',
         'description',
-        'price',
-        'image_id'
+        'price'
     ];
+
+    public function images()
+    {
+        return $this->hasMany(Image::class);
+    }
+
+    public function categories()
+    {
+        return $this->belongsTo(Category::class, 'category_id');
+    }
 }

@@ -1,5 +1,7 @@
 <?php
 
+use App\Http\Controllers\CategoryController;
+use App\Http\Controllers\Controller;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\TestController;
 use Illuminate\Support\Facades\Route;
@@ -15,6 +17,8 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
+Route::get('/', [Controller::class, 'index']);
+
 
 Route::prefix('product')->group(function () {
     Route::get('/', [ProductController::class, 'index'])->name('product.index');
@@ -25,8 +29,12 @@ Route::prefix('product')->group(function () {
     Route::get('/destroy/{id}', [ProductController::class, 'destroy'])->name('product.destroy');
 });
 
-Route::get('/dashboard', function () {
-    return view('dashboard');
-})->middleware(['auth'])->name('dashboard');
+
+Route::resource('/category', CategoryController::class);
+
+
+// Route::get('/dashboard', function () {
+//     return view('dashboard');
+// })->middleware(['auth'])->name('dashboard');
 
 require __DIR__.'/auth.php';

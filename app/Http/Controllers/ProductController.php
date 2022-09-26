@@ -45,7 +45,10 @@ class ProductController extends Controller
 
     public function update(Request $request, $id)
     {
-        DB::table('products')->where('id', $id)->update([
+
+        $products = Product::find('id', $id);
+
+        $products->update([
             'category_id' => $request->category_id,
             'name' => $request->name,
             'description' => $request->description,
