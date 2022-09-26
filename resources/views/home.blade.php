@@ -40,8 +40,8 @@
                     <div class="product-default inner-quickview inner-icon">
                         <figure>
                             <a href="demo3-product.html">
-                                <img src="{{ $product->images->url }}" width="273"
-                                    height="273" alt="productr" />
+                                {{-- <img src="{{ $product->images->url }}" width="273"
+                                    height="273" alt="productr" /> --}}
                             </a>
                             <div class="btn-icon-group">
                                 <a href="#" class="btn-icon btn-add-cart product-type-simple"><i
