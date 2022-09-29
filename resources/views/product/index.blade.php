@@ -36,7 +36,7 @@
         <th scope="col">Description</th>
         <th scope="col">Price</th>
         <th scope="col">Avg Rating</th>
-        {{-- <th scope="col">Images</th> --}}
+        <th scope="col">Images</th>
         <th scope="col"></th>
         <th scope="col"></th>
       </tr>
@@ -50,7 +50,13 @@
                 <td>{{ $product['description'] }}</td>
                 <td>{{ $product['price'] }}</td>
                 <td>{{ $product->comments->avg('rating') }}</td>
-                {{-- <td>{{ $product->images->count() }}</td> --}}
+                <td>
+                    @if (!empty($product->images))
+                        @foreach (json_decode($product->images, true) as $image)
+                            <img class="rounded float-start mw-100 mh-50" src="{{ $image }}">
+                        @endforeach
+                    @endif
+                </td>
                 <td><a href="{{ route('product.edit', $product['id']) }}" class="btn btn-warning">Update</a></td>
                 <td>
                     <form action="{{ route('product.destroy', $product['id']) }}" method="POST">

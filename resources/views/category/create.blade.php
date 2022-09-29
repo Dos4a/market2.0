@@ -11,7 +11,7 @@
     @method('POST')
       <div class="mb-3">
         <label for="exampleFormControlInput1" class="form-label">Name</label>
-        <input type="text" class="form-control" id="exampleFormControlInput1" placeholder="Name" name="name" value="{{ old('name') }}">
+        <input type="text" class="form-control" id="exampleFormControlInput1" placeholder="Name" name="name" value="{{ old('name') }}" required>
       </div>
       @error('name')
         <div class="alert alert-danger" role="alert">

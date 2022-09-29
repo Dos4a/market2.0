@@ -51,11 +51,12 @@ class ProductController extends Controller
 
         $product = $request->validated();
 
-        // foreach($request->images as $image) {
-        //     $name = $image->getClientOriginalName();
-        //     $image->move(public_path() . '/images', $name);
-        //     $data[] = $name;
-        // }
+        foreach($request->file('images') as $image) {
+            $path = $image->store('/images/resource', ['disk' =>   'my_files']);
+            $data[] = $path;
+        }
+
+        $product['images'] = json_encode($data);
 
         Product::create($product);
 

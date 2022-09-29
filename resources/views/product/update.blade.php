@@ -23,7 +23,7 @@
       @enderror
       <div class="mb-3">
         <label for="exampleFormControlInput1" class="form-label">Name</label>
-        <input type="text" class="form-control" id="exampleFormControlInput1" placeholder="Name" name="name" value="{{ $product['name'] }}">
+        <input type="text" class="form-control" id="exampleFormControlInput1" placeholder="Name" name="name" value="{{ $product['name'] }}" required>
       </div>
       @error('name')
         <div class="alert alert-danger" role="alert">
@@ -32,7 +32,7 @@
       @enderror
       <div class="mb-3">
         <label for="exampleFormControlTextarea1" class="form-label">Description</label>
-        <textarea class="form-control" id="exampleFormControlTextarea1" name="description" rows="3">{{ $product['description'] }}</textarea>
+        <textarea class="form-control" id="exampleFormControlTextarea1" name="description" rows="3" required>{{ $product['description'] }}</textarea>
       </div>
       @error('description')
         <div class="alert alert-danger" role="alert">
@@ -41,7 +41,7 @@
       @enderror
       <div class="mb-3">
         <label for="exampleFormControlInput1" class="form-label">Price</label>
-        <input type="text" class="form-control" id="exampleFormControlInput1" placeholder="Price" name="price" value="{{ $product['price'] }}">
+        <input type="text" class="form-control" id="exampleFormControlInput1" placeholder="Price" name="price" value="{{ $product['price'] }}" required>
       </div>
       @error('price')
         <div class="alert alert-danger" role="alert">

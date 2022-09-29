@@ -47,12 +47,9 @@ class CommentController extends Controller
     {
         $comment = $request->validated();
 
-        Comment::create([
-            'user_id' => auth()->user()->id,
-            'product_id' => $request->product_id,
-            'comment' => $request->comment,
-            'rating' => $request->rating,
-        ]);
+        $comment['user_id'] = auth()->user()->id;
+
+        Comment::create($comment);
 
         return redirect()->route('comment.index')->with('successCreate', 'You create successfuly');
     }
@@ -76,7 +73,6 @@ class CommentController extends Controller
      */
     public function edit(Comment $comment)
     {
-        $comment = Comment::find($comment['id']);
         $products = Product::all();
 
         return view('comment.update', [
