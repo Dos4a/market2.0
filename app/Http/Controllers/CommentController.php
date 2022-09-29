@@ -2,7 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\CommentStoreRequest;
+use App\Http\Requests\CommentUpdateRequest;
 use App\Models\Comment;
+use App\Models\Product;
 use Illuminate\Http\Request;
 
 class CommentController extends Controller
@@ -14,7 +17,11 @@ class CommentController extends Controller
      */
     public function index()
     {
-        //
+        $comments = Comment::with(['users', 'products'])->orderBy('id')->paginate(15);
+
+        return view('comment.index', [
+            'comments' => $comments
+        ]);
     }
 
     /**
@@ -24,7 +31,10 @@ class CommentController extends Controller
      */
     public function create()
     {
-        //
+        $products = Product::all();
+        return view('comment.create',[
+            'products' => $products
+        ]);
     }
 
     /**
@@ -33,9 +43,18 @@ class CommentController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(CommentStoreRequest $request)
     {
-        //
+        $comment = $request->validated();
+
+        Comment::create([
+            'user_id' => auth()->user()->id,
+            'product_id' => $request->product_id,
+            'comment' => $request->comment,
+            'rating' => $request->rating,
+        ]);
+
+        return redirect()->route('comment.index')->with('successCreate', 'You create successfuly');
     }
 
     /**
@@ -57,7 +76,13 @@ class CommentController extends Controller
      */
     public function edit(Comment $comment)
     {
-        //
+        $comment = Comment::find($comment['id']);
+        $products = Product::all();
+
+        return view('comment.update', [
+            'comment' => $comment,
+            'products' => $products
+        ]);
     }
 
     /**
@@ -67,9 +92,13 @@ class CommentController extends Controller
      * @param  \App\Models\Comment  $comment
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Comment $comment)
+    public function update(CommentUpdateRequest $request, Comment $comment)
     {
-        //
+        $data = $request->validated();
+
+        $comment->update($data);
+
+        return redirect()->route('comment.index')->with('successUpdate', 'You update successfuly');
     }
 
     /**
@@ -80,6 +109,8 @@ class CommentController extends Controller
      */
     public function destroy(Comment $comment)
     {
-        //
+        $comment->delete();
+
+        return back()->with('successDelete', 'You delete successfuly');
     }
 }

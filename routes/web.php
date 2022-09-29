@@ -1,9 +1,8 @@
 <?php
 
 use App\Http\Controllers\CategoryController;
-use App\Http\Controllers\Controller;
+use App\Http\Controllers\CommentController;
 use App\Http\Controllers\ProductController;
-use App\Http\Controllers\TestController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -17,24 +16,18 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', [Controller::class, 'index']);
-
-
-Route::prefix('product')->group(function () {
-    Route::get('/', [ProductController::class, 'index'])->name('product.index');
-    Route::get('/create', [ProductController::class, 'create'])->name('product.create');
-    Route::post('/store', [ProductController::class, 'store'])->name('product.store');
-    Route::get('/edit/{id}', [ProductController::class, 'edit'])->name('product.edit');
-    Route::put('/update/{product}', [ProductController::class, 'update'])->name('product.update');
-    Route::get('/destroy/{id}', [ProductController::class, 'destroy'])->name('product.destroy');
+Route::get('/', function () {
+    return redirect()->route('product.index');
 });
 
+Route::middleware(['auth'])->group(function () {
+    Route::resource('product', ProductController::class);
+    Route::resource('category', CategoryController::class);
+});
+Route::resource('comment', CommentController::class);
 
-Route::resource('/category', CategoryController::class);
-
-
-// Route::get('/dashboard', function () {
-//     return view('dashboard');
-// })->middleware(['auth'])->name('dashboard');
+Route::get('/dashboard', function () {
+    return redirect()->route('product.index');
+});
 
 require __DIR__.'/auth.php';

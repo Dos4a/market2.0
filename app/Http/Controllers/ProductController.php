@@ -2,67 +2,126 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
+use App\Http\Requests\ProductStoreRequest;
+use App\Http\Requests\ProductUpdateRequest;
+use App\Models\Category;
+use App\Models\Comment;
 use App\Models\Product;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
 
 class ProductController extends Controller
 {
-
+    /**
+     * Display a listing of the resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
     public function index()
     {
-        $products = Product::all();
+        $products = Product::with('categories', 'comments')->orderBy('id')->paginate(15);
 
-        return view('products', compact('products'));
+        return view('product.index', [
+            'products' => $products
+        ]);
     }
 
+    /**
+     * Show the form for creating a new resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
     public function create()
     {
-        return view('productAdd');
-    }
-
-
-    public function store(Request $request)
-    {
-        Product::create([
-            'category_id' => $request->category_id,
-            'name' => $request->name,
-            'description' => $request->description,
-            'price' => $request->price,
-            'image_id' => $request->image_id,
+        $categories = Category::all();
+        return view('product.create',[
+            'categories' => $categories
         ]);
-
-        return redirect(route('product.index'));
     }
 
-    public function edit($id)
+    /**
+     * Store a newly created resource in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
+    public function store(ProductStoreRequest $request)
     {
-        $data = Product::find($id);
 
-        return view('edit', compact('data'));
+        $product = $request->validated();
+
+        // foreach($request->images as $image) {
+        //     $name = $image->getClientOriginalName();
+        //     $image->move(public_path() . '/images', $name);
+        //     $data[] = $name;
+        // }
+
+        Product::create($product);
+
+        return redirect()->route('product.index')->with('successCreate', 'You create successfuly');
     }
 
-    public function update(Request $request, $id)
+    /**
+     * Display the specified resource.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function show($id)
     {
+        $product = Product::find($id);
 
-        $products = Product::find('id', $id);
-
-        $products->update([
-            'category_id' => $request->category_id,
-            'name' => $request->name,
-            'description' => $request->description,
-            'price' => $request->price,
-            'image_id' => $request->image_id,
+        return view('product.item', [
+            'product' => $product
         ]);
-
-        return redirect(route('product.index'));
     }
 
-    public function destroy($id)
+    /**
+     * Show the form for editing the specified resource.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function edit(Product $product)
     {
-        DB::table('products')->where('id', $id)->delete();
+        $categories = Category::all();
 
-        return redirect(route('product.index'));
+        return view('product.update', [
+            'product' => $product,
+            'categories' => $categories,
+        ]);
+    }
+
+    /**
+     * Update the specified resource in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function update(ProductUpdateRequest $request, Product $product)
+    {
+
+        $data = $request->validated();
+
+
+        $product->update($data);
+
+        return redirect()->route('product.index')->with('successUpdate', 'You update successfuly');
+
+    }
+
+    /**
+     * Remove the specified resource from storage.
+     *
+     * @param \App\Models\Product
+     * @return \Illuminate\Http\Response
+     */
+    public function destroy(Product $product)
+    {
+        $product->delete();
+
+        return redirect()->route('product.index')->with('successDelete', 'You delete successfuly');
     }
 }

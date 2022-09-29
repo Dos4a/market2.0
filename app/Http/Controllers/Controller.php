@@ -12,19 +12,4 @@ use Illuminate\Routing\Controller as BaseController;
 class Controller extends BaseController
 {
     use AuthorizesRequests, DispatchesJobs, ValidatesRequests;
-
-    public function index()
-    {
-        $categories = Category::all();
-        $products = Product::with('images', 'categories')->get();
-
-        // dd($products);
-
-
-        return view('home',
-        [
-            'categories' => $categories,
-            'products' => $products
-        ]);
-    }
 }
