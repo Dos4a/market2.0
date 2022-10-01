@@ -9,7 +9,8 @@ use App\Models\Comment;
 use App\Models\Product;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
-
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\File;
 
 class ProductController extends Controller
 {
@@ -72,9 +73,12 @@ class ProductController extends Controller
     public function show($id)
     {
         $product = Product::find($id);
+        // $images = Storage::get(json_decode($product->images));
+
+        // dd($images);
 
         return view('product.item', [
-            'product' => $product
+            'product' => $product,
         ]);
     }
 
@@ -103,9 +107,23 @@ class ProductController extends Controller
      */
     public function update(ProductUpdateRequest $request, Product $product)
     {
-
         $data = $request->validated();
 
+            foreach (json_decode($product->images) as $image) {
+                $path = public_path($image);
+                if (File::exists($path)) {
+                    File::delete($path);
+                }
+            }
+
+            if ($request->hasFile('images')) {
+                foreach($request->file('images') as $image) {
+                    $path = $image->store('/images/resource', ['disk' =>   'my_files']);
+                    $images[] = $path;
+                }
+            }
+
+            $data['images'] = json_encode($images);
 
         $product->update($data);
 
@@ -121,6 +139,11 @@ class ProductController extends Controller
      */
     public function destroy(Product $product)
     {
+        if ($product->images != null and $product->images != '') {
+            foreach (json_decode($product->images) as $image) {
+                unlink(public_path($image));
+            }
+        }
         $product->delete();
 
         return redirect()->route('product.index')->with('successDelete', 'You delete successfuly');

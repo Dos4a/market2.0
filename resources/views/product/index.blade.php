@@ -53,7 +53,7 @@
                 <td>
                     @if (!empty($product->images))
                         @foreach (json_decode($product->images, true) as $image)
-                            <img class="rounded float-start mw-100 mh-50" src="{{ $image }}">
+                            <img class="w-25 p-0" src="{{ asset($image) }}">
                         @endforeach
                     @endif
                 </td>
