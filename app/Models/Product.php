@@ -17,6 +17,11 @@ class Product extends Model
         'images'
     ];
 
+    protected $hidden = [
+        'created_at',
+        'updated_at'
+    ];
+
     public function categories()
     {
         return $this->belongsTo(Category::class, 'category_id');

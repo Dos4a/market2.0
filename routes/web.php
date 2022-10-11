@@ -16,9 +16,9 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-// Route::get('/', function () {
-//     return redirect()->route('product.index');
-// });
+Route::get('/', function () {
+    return redirect()->route('voyager.login');
+});
 
 Route::middleware(['auth'])->group(function () {
     Route::resource('product', ProductController::class);
@@ -27,7 +27,7 @@ Route::middleware(['auth'])->group(function () {
 });
 
 
-require __DIR__.'/auth.php';
+// require __DIR__.'/auth.php';
 
 
 Route::group(['prefix' => 'admin'], function () {
